@@ -13,32 +13,32 @@ export const Switch = (props: SwitchProps) => {
     const [isOn, setIsOn] = React.useState(false);
 
     const onDragMove = (event: KonvaEventObject<DragEvent>) => {
-        const connection = props.connectorProps.connections.find((con) => con.leftConnector === props.connectorProps.id || con.rightConnector === props.connectorProps.id);
-        if (connection) {
-            const isLeftPoint = connection.leftConnector === props.connectorProps.id;
-            const x = event.target.absolutePosition().x + 75;
-            const y = event.target.absolutePosition().y + 25;
-            if (isLeftPoint) {
-                props.connectorProps.lineDispatcher({ type: 'UPDATE_LEFT_POINT', value: { id: connection.id, x0: x, y0: y } })
-            } else {
-                props.connectorProps.lineDispatcher({ type: 'UPDATE_RIGHT_POINT', value: { id: connection.id, x1: x, y1: y } })
-            }
-        } else {
-            return;
-        }
+        // const connection = props.connectorProps.connections.find((con) => con.leftConnector === props.connectorProps.id || con.rightConnector === props.connectorProps.id);
+        // if (connection) {
+        //     const isLeftPoint = connection.leftConnector === props.connectorProps.id;
+        //     const x = event.target.absolutePosition().x + 75;
+        //     const y = event.target.absolutePosition().y + 25;
+        //     if (isLeftPoint) {
+        //         props.connectorProps.lineDispatcher({ type: 'UPDATE_LEFT_POINT', value: { id: connection.id, x0: x, y0: y } })
+        //     } else {
+        //         props.connectorProps.lineDispatcher({ type: 'UPDATE_RIGHT_POINT', value: { id: connection.id, x1: x, y1: y } })
+        //     }
+        // } else {
+        //     return;
+        // }
     }
 
     const handleSwitchClick = () => {
-        const connectionToToggle = props.connectorProps.connections.find((c) => {
-            return c.leftConnector === props.connectorProps.id || c.rightConnector === props.connectorProps.id;
-        });
+        // const connectionToToggle = props.connectorProps.connections.find((c) => {
+        //     return c.leftConnector === props.connectorProps.id || c.rightConnector === props.connectorProps.id;
+        // });
 
-        if (connectionToToggle) {
-            props.connectorProps.lineDispatcher({ type: 'TOGGLE_ACTIVATE', value: { id: connectionToToggle.id, isActivated: !isOn } })
-            setIsOn(!isOn);
-        } else {
-            return;
-        }
+        // if (connectionToToggle) {
+        //     props.connectorProps.lineDispatcher({ type: 'TOGGLE_ACTIVATE', value: { id: connectionToToggle.id, isActivated: !isOn } })
+        //     setIsOn(!isOn);
+        // } else {
+        //     return;
+        // }
 
     }
 

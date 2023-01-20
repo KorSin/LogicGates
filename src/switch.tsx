@@ -2,49 +2,53 @@ import { Group, Rect, Text } from "react-konva"
 import { KonvaEventObject } from "konva/lib/Node";
 import { ConnectorPoint, ConnectorPointProps } from "./ConnectorPoint"
 import React from "react";
+import { useAppDispatch, useAppSelector } from "./hooks";
+import { activateConnectorPoint, deactivateConnectorPoint, updateConnectorPoint } from "./reducers/connectorPointSlicer";
+import { activateConnection, deactivateConnection } from "./reducers/connectionSlicer";
 
-type SwitchProps = {
+export type SwitchProps = {
+    id: string,
     x: number,
     y: number,
-    connectorProps: ConnectorPointProps,
+    connectorId: string,
 }
 
-export const Switch = (props: SwitchProps) => {
+export const Switch: React.FC<SwitchProps> = (props) => {
+    const dispatch = useAppDispatch()
     const [isOn, setIsOn] = React.useState(false);
+    const connectionLine = useAppSelector(state => state.connection)
 
     const onDragMove = (event: KonvaEventObject<DragEvent>) => {
-        // const connection = props.connectorProps.connections.find((con) => con.leftConnector === props.connectorProps.id || con.rightConnector === props.connectorProps.id);
-        // if (connection) {
-        //     const isLeftPoint = connection.leftConnector === props.connectorProps.id;
-        //     const x = event.target.absolutePosition().x + 75;
-        //     const y = event.target.absolutePosition().y + 25;
-        //     if (isLeftPoint) {
-        //         props.connectorProps.lineDispatcher({ type: 'UPDATE_LEFT_POINT', value: { id: connection.id, x0: x, y0: y } })
-        //     } else {
-        //         props.connectorProps.lineDispatcher({ type: 'UPDATE_RIGHT_POINT', value: { id: connection.id, x1: x, y1: y } })
-        //     }
-        // } else {
-        //     return;
-        // }
+        dispatch(updateConnectorPoint(
+            {
+                id: props.connectorId,
+                x: event.currentTarget.absolutePosition().x + 75,
+                y: event.target.absolutePosition().y + 25,
+            }
+        ))
     }
 
     const handleSwitchClick = () => {
-        // const connectionToToggle = props.connectorProps.connections.find((c) => {
-        //     return c.leftConnector === props.connectorProps.id || c.rightConnector === props.connectorProps.id;
-        // });
-
-        // if (connectionToToggle) {
-        //     props.connectorProps.lineDispatcher({ type: 'TOGGLE_ACTIVATE', value: { id: connectionToToggle.id, isActivated: !isOn } })
-        //     setIsOn(!isOn);
-        // } else {
-        //     return;
-        // }
-
+        setIsOn(!isOn);
+        const connection = connectionLine.find(it => it.leftConnector === props.connectorId || it.rightConnector === props.connectorId)
+        if (connection) {
+            if (!isOn) {
+                dispatch(activateConnection(props.connectorId))
+                dispatch(activateConnectorPoint({ id: connection.rightConnector }))
+                dispatch(activateConnectorPoint({ id: connection.leftConnector }))
+            } else {
+                dispatch(deactivateConnection(props.connectorId))
+                dispatch(deactivateConnectorPoint({ id: connection.rightConnector }))
+                dispatch(deactivateConnectorPoint({ id: connection.leftConnector }))
+            }
+        }
     }
 
-    const newConnectorProps = props.connectorProps;
-    newConnectorProps.x = 75;
-    newConnectorProps.y = 25;
+    const connectorProps: ConnectorPointProps = {
+        id: props.connectorId,
+        x: 75,
+        y: 25,
+    }
 
     const switchLabel = isOn ? "ON" : "OFF";
     const switchColor = isOn ? "green" : "red";
@@ -72,7 +76,7 @@ export const Switch = (props: SwitchProps) => {
                 y={20}
                 text={switchLabel}
                 onClick={handleSwitchClick}></Text>
-            <ConnectorPoint {...newConnectorProps}>
+            <ConnectorPoint {...connectorProps}>
             </ConnectorPoint>
         </Group>
     )

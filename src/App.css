@@ -1,0 +1,6 @@
+.app-create-buttons {
+    display: flex;
+    border-bottom: 6px solid black;
+    padding-bottom: 10px;
+    gap: 10px;
+}

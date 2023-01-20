@@ -3,10 +3,10 @@ import React from 'react';
 import { Rect, Circle, Group } from 'react-konva';
 import { ConnectorPoint, ConnectorPointProps } from './ConnectorPoint';
 import { KonvaEventObject } from 'konva/lib/Node';
-import { useAppDispatch } from './hooks';
+import { useAppDispatch, useAppSelector } from './hooks';
 import { updateConnectorPoint } from './reducers/connectorPointSlicer';
 
-type LightProps = {
+export type LightProps = {
     id: string,
     x: number,
     y: number,
@@ -14,9 +14,15 @@ type LightProps = {
 };
 
 
-export function Light(props: LightProps) {
+export const Light: React.FC<LightProps> = (props) => {
     const dispatch = useAppDispatch()
-    const lightIsOn = React.useState(false)
+    const isActivated = useAppSelector(state => {
+        const point = state.connectorPoints.find(it => it.id === props.connectorId)
+        if (point) {
+            return point.isActivated;
+        }
+        return false;
+    })
 
 
     const onDragMove = (event: KonvaEventObject<DragEvent>) => {
@@ -29,7 +35,7 @@ export function Light(props: LightProps) {
         ))
     }
 
-    const lightColor = lightIsOn ? "yellow" : "white";
+    const lightColor = isActivated ? "yellow" : "white";
     const connectorProps: ConnectorPointProps = {
         id: props.connectorId,
         x: 0,

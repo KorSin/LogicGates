@@ -10,7 +10,7 @@ export type ConnectorPointProps = {
     y: number,
 };
 
-export const ConnectorPoint = (props: ConnectorPointProps) => {
+export const ConnectorPoint: React.FC<ConnectorPointProps> = (props) => {
     const dispatch = useAppDispatch();
     const [isConnected, setIsConnected] = React.useState(false);
     const isDrawingLine = useAppSelector(state => state.currentDrawing.isDrawing)
@@ -25,7 +25,7 @@ export const ConnectorPoint = (props: ConnectorPointProps) => {
                     isDrawing: false,
                     currentConnector: ""
                 })
-                dispatchConnection({ leftConnector: leftConnector, rightConnector: props.id })
+                dispatchConnection({ leftConnector: leftConnector, rightConnector: props.id, isActivated: false })
                 setIsConnected(true);
                 return;
             } else {

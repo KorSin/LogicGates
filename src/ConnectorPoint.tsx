@@ -1,8 +1,8 @@
 import React from 'react';
 import { Circle } from "react-konva"
-import { Connection, createConnection } from './reducers/connectionSlicer';
 import { CurrentDrawProperties, setCurrentDrawing } from './reducers/currentDrawingSlicer';
 import { useAppDispatch, useAppSelector } from './hooks';
+import { connectTwoPoints } from './reducers/networkSlicer';
 
 export type ConnectorPointProps = {
     id: string,
@@ -25,7 +25,11 @@ export const ConnectorPoint: React.FC<ConnectorPointProps> = (props) => {
                     isDrawing: false,
                     currentConnector: ""
                 })
-                dispatchConnection({ leftConnector: leftConnector, rightConnector: props.id, isActivated: false })
+
+                dispatch(connectTwoPoints({
+                    id_1: leftConnector,
+                    id_2: props.id,
+                }))
                 setIsConnected(true);
                 return;
             } else {
@@ -36,9 +40,6 @@ export const ConnectorPoint: React.FC<ConnectorPointProps> = (props) => {
                 setIsConnected(true);
             }
         }
-    }
-    const dispatchConnection = (connection: Connection) => {
-        dispatch(createConnection(connection))
     }
 
     const dispatchCurrentDrawing = (currentDrawing: CurrentDrawProperties) => {

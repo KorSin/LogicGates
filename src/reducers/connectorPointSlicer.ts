@@ -11,9 +11,9 @@ const connectorPointSlicer = createSlice({
     name: 'connectorPoint',
     initialState: [] as ConnectorPoint[],
     reducers: {
-        createConnectorPoint(state, action: PayloadAction<ConnectorPoint>) {
-            state.push(action.payload)
-        },
+        // createConnectorPoint(state, action: PayloadAction<ConnectorPoint>) {
+        //     state.push(action.payload)
+        // },
         updateConnectorPoint(state, action: PayloadAction<{ id: string, x: number, y: number }>) {
             const point = state.find(it => it.id === action.payload.id)
             if (point) {
@@ -36,6 +36,6 @@ const connectorPointSlicer = createSlice({
     }
 })
 
-export const { createConnectorPoint, updateConnectorPoint, activateConnectorPoint, deactivateConnectorPoint } = connectorPointSlicer.actions
+export const { updateConnectorPoint, activateConnectorPoint, deactivateConnectorPoint } = connectorPointSlicer.actions
 
 export default connectorPointSlicer.reducer

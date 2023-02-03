@@ -4,40 +4,35 @@ import { Rect, Circle, Group } from 'react-konva';
 import { ConnectorPoint, ConnectorPointProps } from './ConnectorPoint';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { useAppDispatch, useAppSelector } from './hooks';
-import { updateConnectorPoint } from './reducers/connectorPointSlicer';
+import { updateConnectorPointCoords } from './reducers/networkSlicer';
 
 export type LightProps = {
     id: string,
     x: number,
     y: number,
-    connectorId: string,
+    connectorPoints: string[],
 };
 
 
 export const Light: React.FC<LightProps> = (props) => {
     const dispatch = useAppDispatch()
-    const isActivated = useAppSelector(state => {
-        const point = state.connectorPoints.find(it => it.id === props.connectorId)
-        if (point) {
-            return point.isActivated;
-        }
-        return false;
+    const connectorPoints = useAppSelector(state => {
+        return state.network.connectorPoints.filter(point => props.connectorPoints.includes(point.id))
     })
 
-
     const onDragMove = (event: KonvaEventObject<DragEvent>) => {
-        dispatch(updateConnectorPoint(
+        dispatch(updateConnectorPointCoords(
             {
-                id: props.connectorId,
+                id: connectorPoints[0].id,
                 x: event.currentTarget.absolutePosition().x,
                 y: event.target.absolutePosition().y + 25,
             }
         ))
     }
 
-    const lightColor = isActivated ? "yellow" : "white";
+    const lightColor = connectorPoints[0].isActive ? "yellow" : "white";
     const connectorProps: ConnectorPointProps = {
-        id: props.connectorId,
+        id: connectorPoints[0].id,
         x: 0,
         y: 25
     }
@@ -61,6 +56,6 @@ export const Light: React.FC<LightProps> = (props) => {
             </Circle>
             <ConnectorPoint {...connectorProps}>
             </ConnectorPoint>
-        </Group>
+        </Group >
     )
 }

@@ -3,25 +3,28 @@ import { KonvaEventObject } from "konva/lib/Node";
 import { ConnectorPoint, ConnectorPointProps } from "./ConnectorPoint"
 import React from "react";
 import { useAppDispatch, useAppSelector } from "./hooks";
-import { activateConnectorPoint, deactivateConnectorPoint, updateConnectorPoint } from "./reducers/connectorPointSlicer";
-import { activateConnection, deactivateConnection } from "./reducers/connectionSlicer";
+import { activateConnectorPoint, updateConnectorPointCoords } from "./reducers/networkSlicer";
 
 export type SwitchProps = {
     id: string,
     x: number,
     y: number,
-    connectorId: string,
+    connectorPoints: string[],
 }
 
 export const Switch: React.FC<SwitchProps> = (props) => {
     const dispatch = useAppDispatch()
+
     const [isOn, setIsOn] = React.useState(false);
-    const connectionLine = useAppSelector(state => state.connection)
+    const connectorPoints = useAppSelector(state => {
+        return state.network.connectorPoints.filter(point => props.connectorPoints.includes(point.id))
+    })
+
 
     const onDragMove = (event: KonvaEventObject<DragEvent>) => {
-        dispatch(updateConnectorPoint(
+        dispatch(updateConnectorPointCoords(
             {
-                id: props.connectorId,
+                id: connectorPoints[0].id,
                 x: event.currentTarget.absolutePosition().x + 75,
                 y: event.target.absolutePosition().y + 25,
             }
@@ -30,22 +33,11 @@ export const Switch: React.FC<SwitchProps> = (props) => {
 
     const handleSwitchClick = () => {
         setIsOn(!isOn);
-        const connection = connectionLine.find(it => it.leftConnector === props.connectorId || it.rightConnector === props.connectorId)
-        if (connection) {
-            if (!isOn) {
-                dispatch(activateConnection(props.connectorId))
-                dispatch(activateConnectorPoint({ id: connection.rightConnector }))
-                dispatch(activateConnectorPoint({ id: connection.leftConnector }))
-            } else {
-                dispatch(deactivateConnection(props.connectorId))
-                dispatch(deactivateConnectorPoint({ id: connection.rightConnector }))
-                dispatch(deactivateConnectorPoint({ id: connection.leftConnector }))
-            }
-        }
+        dispatch(activateConnectorPoint(connectorPoints[0].id))
     }
 
     const connectorProps: ConnectorPointProps = {
-        id: props.connectorId,
+        id: connectorPoints[0].id,
         x: 75,
         y: 25,
     }

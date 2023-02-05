@@ -16,23 +16,23 @@ export type LightProps = {
 
 export const Light: React.FC<LightProps> = (props) => {
     const dispatch = useAppDispatch()
-    const connectorPoints = useAppSelector(state => {
-        return state.network.connectorPoints.filter(point => props.connectorPoints.includes(point.id))
+    const connectorPoint = useAppSelector(state => {
+        return state.network.connectorPoints[props.connectorPoints[0]]
     })
 
     const onDragMove = (event: KonvaEventObject<DragEvent>) => {
         dispatch(updateConnectorPointCoords(
             {
-                id: connectorPoints[0].id,
+                id: connectorPoint.id,
                 x: event.currentTarget.absolutePosition().x,
                 y: event.target.absolutePosition().y + 25,
             }
         ))
     }
 
-    const lightColor = connectorPoints[0].isActive ? "yellow" : "white";
+    const lightColor = connectorPoint.isActive ? "yellow" : "white";
     const connectorProps: ConnectorPointProps = {
-        id: connectorPoints[0].id,
+        id: connectorPoint.id,
         x: 0,
         y: 25
     }

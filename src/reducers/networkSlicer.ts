@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { OrGate } from "../OrGate";
 import { ConnectorPointState, NetworkNode } from "./network";
 
 export type Network = {
@@ -78,6 +77,28 @@ const updateNetorkNode = (node: NetworkNode, connectorPoints: Record<string, Con
         else if (!nodePoints[0].isActive || !nodePoints[1].isActive) {
             if (nodePoints[2].isActive) {
                 pointsToUpdate.push({ id: node.connectorPoints[2], toggle: false })
+            }
+        }
+    } else if (node.type === "NAndGate") {
+        if (!nodePoints[0].isActive || !nodePoints[1].isActive) {
+            if (!nodePoints[2].isActive) {
+                pointsToUpdate.push({ id: node.connectorPoints[2], toggle: true })
+            }
+        }
+        else if (nodePoints[0].isActive && nodePoints[1].isActive) {
+            if (nodePoints[2].isActive) {
+                pointsToUpdate.push({ id: node.connectorPoints[2], toggle: false })
+            }
+        }
+    } else if (node.type === "NOrGate") {
+        if (nodePoints[0].isActive || nodePoints[1].isActive) {
+            if (nodePoints[2].isActive) {
+                pointsToUpdate.push({ id: node.connectorPoints[2], toggle: false })
+            }
+        }
+        else if (!nodePoints[0].isActive && !nodePoints[1].isActive) {
+            if (!nodePoints[2].isActive) {
+                pointsToUpdate.push({ id: node.connectorPoints[2], toggle: true })
             }
         }
     } else if (node.type === "OrGate") {

@@ -14,6 +14,8 @@ import { Splitter } from "./Splitter";
 import { AndGate } from "./AndGate";
 import { OrGate } from "./OrGate";
 import { XorGate } from "./XorGate";
+import { NAndGate } from "./NAndGate";
+import { NOrGate } from "./NOrGate";
 
 export const App: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -244,6 +246,83 @@ export const App: React.FC = () => {
         dispatch(createConnectorPoint(newConnectorPoint2));
     }
 
+    const onCreateNAndGateButtonClick = () => {
+        const numberOfNodes = Object.keys(networkNodes).length;
+        const id = "NAndGate_" + numberOfNodes.toString()
+        const newSplitter: NetworkNode = {
+            id: id,
+            x: 250,
+            y: 250,
+            connectorPoints: [id + "_0", id + "_1", id + "_2"],
+            type: "NAndGate",
+        };
+
+        const newConnectorPoint0: ConnectorPointState = {
+            id: id + "_0",
+            x: 250,
+            y: 250,
+            isActive: false,
+            networkNode: id
+        }
+        const newConnectorPoint1: ConnectorPointState = {
+            id: id + "_1",
+            x: 250,
+            y: 300,
+            isActive: false,
+            networkNode: id
+        }
+        const newConnectorPoint2: ConnectorPointState = {
+            id: id + "_2",
+            x: 300,
+            y: 275,
+            isActive: false,
+            networkNode: id
+        }
+
+        dispatch(createNetworkNode(newSplitter));
+        dispatch(createConnectorPoint(newConnectorPoint0));
+        dispatch(createConnectorPoint(newConnectorPoint1));
+        dispatch(createConnectorPoint(newConnectorPoint2));
+    }
+    const onCreateNOrGateButtonClick = () => {
+        const numberOfNodes = Object.keys(networkNodes).length;
+        const id = "NOrGate_" + numberOfNodes.toString()
+        const newSplitter: NetworkNode = {
+            id: id,
+            x: 250,
+            y: 250,
+            connectorPoints: [id + "_0", id + "_1", id + "_2"],
+            type: "NOrGate",
+        };
+
+        const newConnectorPoint0: ConnectorPointState = {
+            id: id + "_0",
+            x: 250,
+            y: 250,
+            isActive: false,
+            networkNode: id
+        }
+        const newConnectorPoint1: ConnectorPointState = {
+            id: id + "_1",
+            x: 250,
+            y: 300,
+            isActive: false,
+            networkNode: id
+        }
+        const newConnectorPoint2: ConnectorPointState = {
+            id: id + "_2",
+            x: 300,
+            y: 275,
+            isActive: false,
+            networkNode: id
+        }
+
+        dispatch(createNetworkNode(newSplitter));
+        dispatch(createConnectorPoint(newConnectorPoint0));
+        dispatch(createConnectorPoint(newConnectorPoint1));
+        dispatch(createConnectorPoint(newConnectorPoint2));
+    }
+
     return (
         <div>
             <div className="app-create-buttons">
@@ -253,6 +332,8 @@ export const App: React.FC = () => {
                 <button onClick={onCreateAndGateButtonClick}>Create AND Gate</button>
                 <button onClick={onCreateOrGateButtonClick}>Create OR Gate</button>
                 <button onClick={onCreateXorGateButtonClick}>Create XOR Gate</button>
+                <button onClick={onCreateNAndGateButtonClick}>Create NAND Gate</button>
+                <button onClick={onCreateNOrGateButtonClick}>Create NOR Gate</button>
             </div>
             <ReactReduxContext.Consumer>
                 {({ store }) =>
@@ -298,6 +379,14 @@ export const App: React.FC = () => {
                                     } else if (node.type === "XorGate") {
                                         return (
                                             <XorGate key={node.id} id={node.id} x={node.x} y={node.y} connectorPoints={node.connectorPoints}></XorGate>
+                                        )
+                                    } else if (node.type === "NAndGate") {
+                                        return (
+                                            <NAndGate key={node.id} id={node.id} x={node.x} y={node.y} connectorPoints={node.connectorPoints}></NAndGate>
+                                        )
+                                    } else if (node.type === "NOrGate") {
+                                        return (
+                                            <NOrGate key={node.id} id={node.id} x={node.x} y={node.y} connectorPoints={node.connectorPoints}></NOrGate>
                                         )
                                     }
                                 })
